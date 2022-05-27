@@ -13,8 +13,4 @@ export default gql`
     avatarURL: String!
     githubUsername: String!
   }
-
-  type Query {
-    user: User
-  }
 `;
