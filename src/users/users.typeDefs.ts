@@ -8,9 +8,15 @@ export default gql`
     username: String!
     email: String!
     name: String!
-    location: String!
+    location: String
     password: String!
-    avatarURL: String!
-    githubUsername: String!
+    avatarURL: String
+    githubUsername: String
+    seeFollowings(page: Int): [User]!
+    seeFollowers(page: Int): [User]!
+    totalFollowing: Int!
+    totalFollowers: Int!
+    isMe: Boolean!
+    isFollowing: Boolean!
   }
 `;

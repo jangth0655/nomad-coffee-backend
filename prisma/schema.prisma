@@ -21,4 +21,6 @@ model User {
   password       String
   avatarURL      String?
   githubUsername String?  @unique
+  followers      User[]   @relation("FollowRelation", references: [id])
+  followings     User[]   @relation("FollowRelation", references: [id])
 }
