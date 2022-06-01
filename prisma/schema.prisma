@@ -11,16 +11,50 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  username       String   @unique
-  email          String   @unique
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  username       String       @unique
+  email          String       @unique
   name           String
   location       String?
   password       String
   avatarURL      String?
-  githubUsername String?  @unique
-  followers      User[]   @relation("FollowRelation", references: [id])
-  followings     User[]   @relation("FollowRelation", references: [id])
+  githubUsername String?      @unique
+  followers      User[]       @relation("FollowRelation", references: [id])
+  followings     User[]       @relation("FollowRelation", references: [id])
+  coffeeShops    CoffeeShop[]
+}
+
+model CoffeeShop {
+  id         Int               @id @default(autoincrement())
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  name       String            @unique
+  slug       String            @unique
+  payload    String?
+  latitude   String?
+  longitude  String?
+  categories Category[]
+  photos     CoffeeShopPhoto[]
+}
+
+model CoffeeShopPhoto {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  url          String
+  shop         CoffeeShop @relation(fields: [coffeeShopId], references: [id], onDelete: Cascade)
+  coffeeShopId Int
+}
+
+model Category {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  shops     CoffeeShop[]
+  slug      String       @unique
+  name      String
 }
