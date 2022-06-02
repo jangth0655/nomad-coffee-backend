@@ -7,6 +7,7 @@ import logger from "morgan";
 import { resolvers, typeDefs } from "./schema";
 import { getUser } from "./user.utils";
 import { graphqlUploadExpress } from "graphql-upload";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 const PORT = process.env.PORT;
 
@@ -23,6 +24,7 @@ async function startApolloServer() {
         client,
       };
     },
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
 
   app.use(graphqlUploadExpress());
