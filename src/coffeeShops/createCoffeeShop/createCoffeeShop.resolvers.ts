@@ -1,8 +1,11 @@
+import { GraphQLUpload } from "graphql-upload";
+import { uploadToS3 } from "../../shared/shared.utils";
 import { Resolvers } from "../../type";
 import { protectResolver } from "../../user.utils";
 import { processSlug } from "../coffeeShops.utls";
 
 const resolver: Resolvers = {
+  Upload: GraphQLUpload as any,
   Mutation: {
     createCoffeeShop: protectResolver(
       async (
@@ -25,8 +28,10 @@ const resolver: Resolvers = {
           };
         }
 
+        const fileUrl = await uploadToS3(url, loggedInUser.id, "upload");
+
         const newSlug = processSlug(categoryName, name);
-        console.log(newSlug);
+
         const shop = await client?.coffeeShop.create({
           data: {
             payload,
@@ -55,7 +60,7 @@ const resolver: Resolvers = {
         if (shop && url) {
           await client?.coffeeShopPhoto.create({
             data: {
-              url,
+              url: fileUrl,
               shop: {
                 connect: {
                   id: shop.id,

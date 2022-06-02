@@ -1,13 +1,16 @@
+import { GraphQLUpload } from "graphql-upload";
+import { deleteToS3, uploadToS3 } from "../../shared/shared.utils";
 import { Resolvers } from "../../type";
 import { protectResolver } from "../../user.utils";
 import { processSlug } from "../coffeeShops.utls";
 
 const resolvers: Resolvers = {
+  Upload: GraphQLUpload as any,
   Mutation: {
     editCoffeeShop: protectResolver(
       async (
         _,
-        { id, name, payload, latitude, longitude, photos, categoryName },
+        { id, name, payload, latitude, longitude, url, categoryName, photoId },
         { client, loggedInUser }
       ) => {
         const existCoffeeShop = await client?.coffeeShop.findFirst({
@@ -54,7 +57,14 @@ const resolvers: Resolvers = {
 
         newSlug = processSlug(newCategoryName, name);
 
-        if (photos) {
+        let updatedPhotoUrl = undefined;
+        if (url && photoId) {
+          await deleteToS3(url, "upload");
+          updatedPhotoUrl = await uploadToS3(url, loggedInUser.id, "upload");
+          await client?.coffeeShopPhoto.update({
+            where: { id: photoId },
+            data: { url: updatedPhotoUrl },
+          });
         }
 
         await client?.coffeeShop.update({
@@ -66,7 +76,6 @@ const resolvers: Resolvers = {
             payload,
             latitude,
             longitude,
-            photos,
             slug: name ? newSlug : existCoffeeShop.slug,
             categories: existCategory
               ? {}

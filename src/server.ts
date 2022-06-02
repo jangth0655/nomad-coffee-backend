@@ -4,9 +4,9 @@ import http from "http";
 import client from "./client";
 import { ApolloServer } from "apollo-server-express";
 import logger from "morgan";
-
 import { resolvers, typeDefs } from "./schema";
 import { getUser } from "./user.utils";
+import { graphqlUploadExpress } from "graphql-upload";
 
 const PORT = process.env.PORT;
 
@@ -25,10 +25,11 @@ async function startApolloServer() {
     },
   });
 
+  app.use(graphqlUploadExpress());
   app.use(logger("tiny"));
-
   await apollo.start();
-  apollo.applyMiddleware({ app, path: "/" });
+
+  apollo.applyMiddleware({ app });
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: PORT }, resolve)
   );

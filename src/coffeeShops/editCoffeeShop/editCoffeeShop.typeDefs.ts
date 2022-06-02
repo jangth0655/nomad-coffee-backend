@@ -1,5 +1,6 @@
 import { gql } from "apollo-server";
 export default gql`
+  scalar Upload
   type EditCoffeeShopResult {
     ok: Boolean!
     error: String
@@ -11,8 +12,9 @@ export default gql`
       payload: String
       latitude: String
       longitude: String
-      photos: String
+      url: Upload
       categoryName: String
+      photoId: Int
     ): EditCoffeeShopResult!
   }
 `;

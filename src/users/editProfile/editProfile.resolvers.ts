@@ -1,8 +1,11 @@
+import { GraphQLUpload } from "graphql-upload";
 import { Resolvers } from "../../type";
 import { protectResolver } from "../../user.utils";
 import bcrypt from "bcrypt";
+import { deleteToS3, uploadToS3 } from "../../shared/shared.utils";
 
 const resolvers: Resolvers = {
+  Upload: GraphQLUpload as any,
   Mutation: {
     editProfile: protectResolver(
       async (
@@ -23,6 +26,12 @@ const resolvers: Resolvers = {
           hashPassword = await bcrypt.hash(newPassword, 10);
         }
 
+        let fileUrl = undefined;
+        if (avatarURL) {
+          await deleteToS3(avatarURL, "avatar");
+          fileUrl = await uploadToS3(avatarURL, loggedInUser.id, "avatar");
+        }
+
         const updateUser = await client?.user.update({
           where: {
             id: loggedInUser.id,
@@ -33,7 +42,7 @@ const resolvers: Resolvers = {
             name,
             location,
             ...(hashPassword && { password: hashPassword }),
-            avatarURL,
+            avatarURL: fileUrl,
             githubUsername,
           },
         });
