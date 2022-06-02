@@ -25,6 +25,7 @@ async function startApolloServer() {
       };
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    introspection: true,
   });
 
   app.use(graphqlUploadExpress());
