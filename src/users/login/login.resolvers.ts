@@ -19,7 +19,7 @@ const resolvers: Resolvers = {
       if (!user) {
         return {
           ok: false,
-          error: "You write incorrect password or username.",
+          error: "Password or Username is incorrect.",
         };
       }
       const passwordOk = await bcrypt.compare(password, user.password);
