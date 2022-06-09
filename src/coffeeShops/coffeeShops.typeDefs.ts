@@ -11,6 +11,7 @@ export default gql`
     id: Int!
     slug: String!
     name: String!
+    payload: String
     latitude: String
     longitude: String
     categories: [Category]!
