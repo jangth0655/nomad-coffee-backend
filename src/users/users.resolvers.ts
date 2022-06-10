@@ -73,13 +73,23 @@ const resolvers: Resolvers = {
         where: {
           userId: id,
         },
-        include: {
-          photos: true,
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          payload: true,
+          photos: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       });
       if (!existShop) {
         return;
       }
+      console.log(existShop);
       return existShop;
     },
   },
