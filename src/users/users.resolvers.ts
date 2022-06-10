@@ -69,9 +69,12 @@ const resolvers: Resolvers = {
       return Boolean(exist);
     },
     userCoffeeShops: async ({ id }, _, { loggedInUser }) => {
-      const existShop = await client.coffeeShop.findFirst({
+      const existShop = await client.coffeeShop.findMany({
         where: {
           userId: id,
+        },
+        include: {
+          photos: true,
         },
       });
       if (!existShop) {
