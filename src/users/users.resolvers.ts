@@ -68,11 +68,13 @@ const resolvers: Resolvers = {
       });
       return Boolean(exist);
     },
-    userCoffeeShops: async ({ id }, _, { loggedInUser }) => {
+    userCoffeeShops: async ({ id }, { page = 1 }, { loggedInUser }) => {
       const existShop = await client.coffeeShop.findMany({
         where: {
           userId: id,
         },
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
         select: {
           id: true,
           slug: true,
@@ -89,7 +91,6 @@ const resolvers: Resolvers = {
       if (!existShop) {
         return;
       }
-      console.log(existShop);
       return existShop;
     },
   },
