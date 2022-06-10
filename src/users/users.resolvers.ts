@@ -68,6 +68,17 @@ const resolvers: Resolvers = {
       });
       return Boolean(exist);
     },
+    userCoffeeShops: async ({ id }, _, { loggedInUser }) => {
+      const existShop = await client.coffeeShop.findFirst({
+        where: {
+          userId: id,
+        },
+      });
+      if (!existShop) {
+        return;
+      }
+      return existShop;
+    },
   },
 };
 
