@@ -11,7 +11,7 @@ AWS.config.update({
 export const uploadToS3 = async (
   file: any,
   userId: number,
-  foldName: string
+  foldName?: string
 ) => {
   const { filename, createReadStream } = await file;
   const readStream: ReadStream = createReadStream();

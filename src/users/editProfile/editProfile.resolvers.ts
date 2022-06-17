@@ -42,7 +42,7 @@ const resolvers: Resolvers = {
             name,
             location,
             ...(hashPassword && { password: hashPassword }),
-            avatarURL: fileUrl,
+            avatarURL: fileUrl ? fileUrl : "",
             githubUsername,
           },
         });
