@@ -1,12 +1,11 @@
 import { Resolvers } from "../../type";
 
-const PAGE_SIZE = 5;
 const resolvers: Resolvers = {
   Query: {
-    seeCoffeeShops: (_, { page = 1 }, { client }) =>
+    seeCoffeeShops: (_, { offset }, { client }) =>
       client?.coffeeShop.findMany({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
+        take: 2,
+        skip: offset,
       }),
   },
 };
